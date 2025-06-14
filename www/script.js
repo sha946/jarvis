@@ -13,12 +13,12 @@ Debugger.log = function (message) {
 }
 
 function windowLoadHandler() {
-	console.log("Canvas init triggered");
+	
 	canvasApp();
 }
 
 function canvasSupport() {
-	return true;
+	return Modernizr.canvas;
 }
 
 function canvasApp() {
@@ -27,8 +27,6 @@ function canvasApp() {
 	}
 
 	var theCanvas = document.getElementById("canvasOne");
-	
-	
 	var context = theCanvas.getContext("2d");
 
 	var displayWidth;
@@ -116,11 +114,10 @@ function canvasApp() {
 		turnSpeed = 2 * Math.PI / 1200; //the sphere will rotate at this speed (one complete rotation every 1600 frames).
 		turnAngle = 0; //initial angle
 
-		timer = setInterval(onTimer, 1000 / 24);
+		timer = setInterval(onTimer, 10 / 24);
 	}
 
 	function onTimer() {
-		console.log("Animation frame");
 		//if enough time has elapsed, we will add new particles.		
 		count++;
 		if (count >= wait) {
