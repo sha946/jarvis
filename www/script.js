@@ -13,7 +13,6 @@ Debugger.log = function (message) {
 }
 
 function windowLoadHandler() {
-	
 	canvasApp();
 }
 
