@@ -10,7 +10,7 @@ $(document).ready(function () {
         $('.siri-message').textillate('start');
 
     }
-     eel.expose(ShowHood)
+    eel.expose(ShowHood)
     function ShowHood() {
         $("#Oval").attr("hidden", false);
         $("#SiriWave").attr("hidden", true);
