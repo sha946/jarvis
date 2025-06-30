@@ -1,4 +1,5 @@
 import multiprocessing
+import subprocess
 
 
 def startJarvis():
@@ -17,6 +18,7 @@ if __name__ == '__main__':
         p1 = multiprocessing.Process(target=startJarvis)
         p2 = multiprocessing.Process(target=listenHotword)
         p1.start()
+        
         p2.start()
         p1.join()
 
@@ -24,4 +26,6 @@ if __name__ == '__main__':
             p2.terminate()
             p2.join()
 
-        print("system stop")                
+        print("system stop") 
+        
+                       
