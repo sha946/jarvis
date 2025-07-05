@@ -43,12 +43,12 @@ cursor.execute(query)
 #cursor.execute(query)
 #con.commit()
 
-query = 'leila'
-query = query.strip().lower()
+#query = 'roben'
+#query = query.strip().lower()
 
-cursor.execute("SELECT mobile_no FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
-results = cursor.fetchall()
-if results:
-    print(results[0][0])
-else:
-    print("No matching record found.")
+#cursor.execute("SELECT mobile_no FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
+#results = cursor.fetchall()
+#if results:
+ #   print(results[0][0])
+#else:
+ #   print("No matching record found.")

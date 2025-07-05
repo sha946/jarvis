@@ -1,31 +1,36 @@
 import os
+from pipes import quote
+import pyttsx3
 import re
-from shlex import quote
 import sqlite3
 import struct
 import subprocess
 import time
-from playsound import playsound
 import webbrowser
+from playsound import playsound
 import eel
 import pyaudio
 import pyautogui
 from engine.command import speak
 from engine.config import ASSISTANT_NAME
+# Playing assiatnt sound function
 import pywhatkit as kit
 import pvporcupine
-from hugchat import hugchat
-
 from engine.helper import extract_yt_term, remove_words
-
+import google.generativeai as genai
+engine = pyttsx3.init()
+genai.configure(api_key="AIzaSyAEacwP25qKAyuVcjnxp7Twv6qKu3tDjsQ")
+model = genai.GenerativeModel('gemini-1.5-flash')
 con = sqlite3.connect("jarvis.db")
 cursor = con.cursor()
+
 
 @eel.expose
 def playAssistantSound():
     music_dir = "www\\assets\\audio\\start_sound.mp3"
     playsound(music_dir)
 
+    
 def openCommand(query):
     query = query.replace(ASSISTANT_NAME, "")
     query = query.replace("open", "")
@@ -60,10 +65,7 @@ def openCommand(query):
                     except:
                         speak("not found")
         except:
-            speak("some thing went wrong")    
-
-          
-              
+            speak("some thing went wrong")
 
        
 
@@ -110,7 +112,10 @@ def hotword():
             audio_stream.close()
         if paud is not None:
             paud.terminate()
-    
+
+
+
+# find contacts
 def findContact(query):
     
     words_to_remove = [ASSISTANT_NAME, 'make', 'a', 'to', 'phone', 'call', 'send', 'message', 'wahtsapp', 'video']
@@ -130,21 +135,21 @@ def findContact(query):
     except:
         speak('not exist in contacts')
         return 0, 0
-
+    
 def whatsApp(mobile_no, message, flag, name):
     
 
     if flag == 'message':
-        target_tab = 12
+        target_tab = 20
         jarvis_message = "message send successfully to "+name
 
     elif flag == 'call':
-        target_tab = 7
+        target_tab = 14
         message = ''
         jarvis_message = "calling to "+name
 
     else:
-        target_tab = 6
+        target_tab = 13
         message = ''
         jarvis_message = "staring video call with "+name
 
@@ -169,15 +174,54 @@ def whatsApp(mobile_no, message, flag, name):
         pyautogui.hotkey('tab')
 
     pyautogui.hotkey('enter')
-    speak(jarvis_message) 
+    speak(jarvis_message)
 
-
+# chat bot 
 def chatBot(query):
-    user_input = query.lower()
-    chatbot = hugchat.ChatBot(cookie_path="engine\cookies.json")
-    id = chatbot.new_conversation()
-    chatbot.change_conversation(id)
-    response = chatbot.chat(user_input)
-    print(response)
-    speak(response)
-    return response   
+    """
+    Takes a query string and generates a response from the Gemini model.
+    """
+    try:
+        response = model.generate_content(query)
+        text_response = response.text
+        print(response.text)
+        engine.say(text_response)
+        engine.runAndWait()
+    except Exception as e:
+        print(f"Error: {e}")
+
+        
+
+# android automation
+
+def makeCall(name, mobileNo):
+    mobileNo =mobileNo.replace(" ", "")
+    speak("Calling "+name)
+    command = 'adb shell am start -a android.intent.action.CALL -d tel:'+mobileNo
+    os.system(command)
+
+
+# to send message
+def sendMessage(message, mobileNo, name):
+    from engine.helper import replace_spaces_with_percent_s, goback, keyEvent, tapEvents, adbInput
+    message = replace_spaces_with_percent_s(message)
+    mobileNo = replace_spaces_with_percent_s(mobileNo)
+    speak("sending message")
+    goback(4)
+    time.sleep(1)
+    keyEvent(3)
+    # open sms app
+    tapEvents(136, 2220)
+    #start chat
+    tapEvents(819, 2192)
+    # search mobile no
+    adbInput(mobileNo)
+    #tap on name
+    tapEvents(601, 574)
+    # tap on input
+    tapEvents(390, 2270)
+    #message
+    adbInput(message)
+    #send
+    tapEvents(957, 1397)
+    speak("message send successfully to "+name)

@@ -5,6 +5,8 @@ from engine.command import *
 from engine.features import *
 from engine.auth import recoganize
 
+
+
 def start():
     eel.init("www")
     playAssistantSound()
@@ -18,7 +20,7 @@ def start():
             eel.hideFaceAuth()
             speak("Face Authentication Successful")
             eel.hideFaceAuthSuccess()
-            speak("Hello, Welcome Sir, How can i Help You")
+            #speak("Hello, Welcome Sir, How can i Help You")
             eel.hideStart()
             playAssistantSound()
         else:
@@ -29,3 +31,4 @@ def start():
 
 
     eel.start('index.html', mode=None, host='localhost', block=True)
+    

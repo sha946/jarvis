@@ -10,14 +10,33 @@ $(document).ready(function () {
         $('.siri-message').textillate('start');
 
     }
+    // Add this to your controller.js
+    eel.expose(updateRecognitionState);
+    function updateRecognitionState(state) {
+    document.getElementById('WishMessage').textContent = state;
+    $('.siri-message').textillate('start');
+    }
+    // Add this to your main.js or controller.js
+    document.addEventListener('DOMContentLoaded', function() {
+     // Request microphone permission when the page loads
+     navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+            console.log('Microphone access granted');
+        })
+        .catch(function(err) {
+            console.error('Microphone access denied', err);
+            alert('Please enable microphone access for this site to use voice commands');
+        });
+    });
+
+    // Display hood
     eel.expose(ShowHood)
     function ShowHood() {
         $("#Oval").attr("hidden", false);
         $("#SiriWave").attr("hidden", true);
     }
 
-
-     eel.expose(senderText)
+    eel.expose(senderText)
     function senderText(message) {
         var chatBox = document.getElementById("chat-canvas-body");
         if (message.trim() !== "") {
@@ -30,6 +49,7 @@ $(document).ready(function () {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
+
     eel.expose(receiverText)
     function receiverText(message) {
 
@@ -46,6 +66,7 @@ $(document).ready(function () {
         }
         
     }
+
     
     // Hide Loader and display Face Auth animation
     eel.expose(hideLoader)
@@ -89,5 +110,4 @@ $(document).ready(function () {
     }
 
 
-    
-}); 
+});
